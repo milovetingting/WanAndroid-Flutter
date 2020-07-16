@@ -26,6 +26,12 @@ dependencies:
   dio: ^3.0.9
   banner_view: ^1.1.2
   flutter_webview_plugin: ^0.3.11
+  event_bus: ^1.1.1
+  shared_preferences: ^0.5.8
+  path_provider: ^1.6.11
+  cookie_jar: ^1.0.1
+  dio_cookie_manager: ^1.0.0
+  toast: ^0.1.5
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -77,3 +83,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  assets:
+    - assets/images/logo.png
