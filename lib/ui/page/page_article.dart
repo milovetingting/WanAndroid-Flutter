@@ -1,8 +1,10 @@
 import 'package:banner_view/banner_view.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:wanandroid/http/Api.dart';
 import 'package:wanandroid/ui/page/page_webview.dart';
 import 'package:wanandroid/ui/widget/article_item.dart';
+import 'package:wanandroid/ui/widget/main_drawer.dart';
 
 class ArticlePage extends StatefulWidget {
   @override
@@ -28,6 +30,8 @@ class _ArticlePageState extends State<ArticlePage> {
   ///当前页
   var curPage = 0;
 
+  DateTime _lastClick;
+
   @override
   void initState() {
     super.initState();
@@ -49,26 +53,57 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ///正在加载
-        Offstage(
-          offstage: !_showLoading,
-          child: Center(child: CircularProgressIndicator()),
-        ),
+    return WillPopScope(
+        onWillPop: () async {
+          //在一定的时间内 2s点击两次才能返回
+          if (_lastClick == null ||
+              DateTime.now().difference(_lastClick) > Duration(seconds: 2)) {
+            _lastClick = DateTime.now();
+            Toast.show("请再按一次退出!", context);
+            return false;
+          }
+          return true;
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text("文章", style: const TextStyle(color: Colors.white)),
+            ),
+            drawer: Drawer(
+              child: MainDrawer(),
+            ),
+            body: Stack(
+              children: <Widget>[
+                ///正在加载
+                Offstage(
+                  offstage: !_showLoading,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
 
-        ///内容
-        Offstage(
-          offstage: _showLoading,
-          child: RefreshIndicator(
-              child: ListView.builder(
-                  itemCount: articles.length + 1,
-                  itemBuilder: (context, i) => _articleItem(i),
-                  controller: _controller),
-              onRefresh: _pullToRefresh),
-        ),
-      ],
-    );
+                ///内容
+                Offstage(
+                  offstage: _showLoading,
+                  child: RefreshIndicator(
+                      child: ListView.builder(
+                          itemCount: articles.length + 1,
+                          itemBuilder: (context, i) => _articleItem(i),
+                          controller: _controller),
+                      onRefresh: _pullToRefresh),
+                ),
+                Offstage(
+                  offstage: _showLoading || articles.isNotEmpty, //是否隐藏
+                  child: new Center(
+                      child: InkWell(
+                    child: Text("(＞﹏＜) 点击重试......"),
+                    onTap: () {
+                      setState(() {
+                        _showLoading = true;
+                      });
+                      _pullToRefresh();
+                    },
+                  )),
+                )
+              ],
+            )));
   }
 
   @override
