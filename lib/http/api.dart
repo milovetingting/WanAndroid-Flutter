@@ -2,17 +2,23 @@ import 'package:dio/dio.dart';
 import 'package:wanandroid/http/http_manager.dart';
 
 class Api {
+
+  ///BaseUrl
   static const String BASE_URL = "https://www.wanandroid.com/";
+
+  ///文章列表
   static const String ARTICLE_LIST = "article/list/";
+
+  ///banner
   static const String BANNER = "banner/json";
 
-  //登录
+  ///登录
   static const String LOGIN = "user/login";
 
-  //注册
+  ///注册
   static const String REGISTER = "user/register";
 
-  //收藏
+  ///收藏
   static const String COLLECT = "lg/collect/list/";
 
   static getArticleList(int page) async {

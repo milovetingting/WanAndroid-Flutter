@@ -15,7 +15,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   initData() async {
-    ///初始化/等待5s显示splash
+    ///初始化/等待3s显示splash
     Iterable<Future> futures = [
       AppManager.initApp(),
       Future.delayed(Duration(seconds: 3))

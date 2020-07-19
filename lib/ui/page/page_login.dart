@@ -57,6 +57,7 @@ class _LoginPageState extends State<LoginPage> {
         ///点击下一步
         FocusScope.of(context).requestFocus(_pwdNode);
       },
+      // ignore: missing_return
       validator: (String value) {
         if (value.trim().isEmpty) {
           return '请输入用户名';
@@ -72,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
 
       ///是否隐藏
       obscureText: _isObscure,
+      // ignore: missing_return
       validator: (String value) {
         if (value.trim().isEmpty) {
           return '请输入密码';
