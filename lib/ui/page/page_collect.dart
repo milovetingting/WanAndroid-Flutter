@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wanandroid/http/api.dart';
+import 'package:wanandroid/res/icons.dart';
+import 'package:wanandroid/ui/page/page_collect_article.dart';
+import 'package:wanandroid/ui/page/page_collect_website.dart';
 
 class CollectPage extends StatefulWidget {
   @override
@@ -7,47 +9,36 @@ class CollectPage extends StatefulWidget {
 }
 
 class _CollectPageState extends State<CollectPage> {
-  int _curPage = 0;
-  bool _isHidden = false;
-
-  //收藏
-  List _collects;
-
-  @override
-  void initState() {
-    super.initState();
-    _getCollects();
-  }
-
-  void _getCollects() async {
-    var data = await Api.getCollects(_curPage);
-    _isHidden = true;
-    _collects = data['datas'];
-    setState(() {});
-  }
+  final tabs = ["文章", "网站"];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("我的收藏"),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Offstage(
-            offstage: _isHidden,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+    return DefaultTabController(
+      ///tab长度
+      length: tabs.length,
+      child: new Scaffold(
+        appBar: new AppBar(
+          title: new Text('我的收藏'),
+          bottom: new TabBar(
+            tabs: <Widget>[
+              new Tab(
+                icon: Icon(
+                  article,
+                  size: 32.0,
+                ),
+              ),
+              new Tab(
+                icon: Icon(website, size: 32.0),
+              ),
+            ],
           ),
-          Offstage(
-            ///如果请求到了收藏数据并且不为空就隐藏，否则显示
-            offstage: _collects?.isNotEmpty ?? !_isHidden,
-            child: Center(
-              child: Text("(＞﹏＜) 你还没有收藏任何内容......"),
-            ),
-          )
-        ],
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            ArticleCollectPage(),
+            WebsiteCollectPage(),
+          ],
+        ),
       ),
     );
   }

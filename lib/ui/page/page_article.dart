@@ -1,7 +1,9 @@
 import 'package:banner_view/banner_view.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
+import 'package:wanandroid/event/events.dart';
 import 'package:wanandroid/http/Api.dart';
+import 'package:wanandroid/manager/app_manager.dart';
 import 'package:wanandroid/ui/page/page_webview.dart';
 import 'package:wanandroid/ui/widget/article_item.dart';
 import 'package:wanandroid/ui/widget/main_drawer.dart';
@@ -45,6 +47,26 @@ class _ArticlePageState extends State<ArticlePage> {
       ///已经滑动到最底部并且还有可以加载的数据
       if (pixels == maxScroll && curPage < totalPage) {
         _getArticleList();
+      }
+    });
+    AppManager.eventBus.on<LogoutEvent>().listen((_) {
+      if (mounted) {
+        setState(() {
+          _pullToRefresh();
+        });
+      }
+    });
+    AppManager.eventBus.on<CollectEvent>().listen((event) {
+      ///页面没有被dispose
+      if (mounted) {
+        //收藏更新
+        // ignore: missing_return
+        articles.every((item) {
+          if (item['id'] == event.id) {
+            item['collect'] = event.collect;
+            return false;
+          }
+        });
       }
     });
 

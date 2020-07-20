@@ -9,4 +9,8 @@ class AppManager {
   static initApp() async {
     preferences = await SharedPreferences.getInstance();
   }
+
+  static isLogin() {
+    return preferences.getString(ACCOUNT) != null;
+  }
 }

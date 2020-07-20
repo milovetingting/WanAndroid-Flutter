@@ -36,16 +36,21 @@ class ArticleItem extends StatelessWidget {
             child: chapterName)
       ],
     );
-    return new Card(
-        elevation: 4.0,
-        child: InkWell(
-          child: column,
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              itemData['url'] = itemData['link'];
-              return WebViewPage(itemData);
-            }));
-          },
-        ));
+    return Card(
+      ///阴影效果
+      elevation: 4.0,
+      child: InkWell(
+        child: column,
+        onTap: ()  async{
+          await Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+            itemData['url'] = itemData['link'];
+            return WebViewPage(
+              itemData,
+              supportCollect: true,
+            );
+          }));
+        },
+      ),
+    );
   }
 }
